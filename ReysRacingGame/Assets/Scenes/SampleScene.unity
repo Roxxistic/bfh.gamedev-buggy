@@ -504,8 +504,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   wheelColliderFL: {fileID: 469827679}
   wheelColliderFR: {fileID: 24693517}
+  wheelColliderBL: {fileID: 1747306944}
+  wheelColliderBR: {fileID: 1914599979}
   maxTorque: 500
   maxSteerAngle: 45
+  sidewaysStiffness: 1.5
+  forewardStiffness: 1.5
 --- !u!1 &945824238
 GameObject:
   m_ObjectHideFlags: 0
@@ -782,7 +786,7 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 1692180568}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1375513851
+--- !u!114 &1375513854
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -801,7 +805,7 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 1692180568}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1411060510
+--- !u!114 &1411060513
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1048,7 +1052,7 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 1692180568}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1770246861
+--- !u!114 &1770246864
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1128,7 +1132,7 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 1692180568}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1987362131
+--- !u!114 &1987362134
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
