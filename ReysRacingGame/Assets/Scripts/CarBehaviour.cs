@@ -18,7 +18,8 @@ public class CarBehaviour : MonoBehaviour
     public float maxSpeedBackwardKMH = 1;
     public RectTransform speedPointerTransform;
     public TMP_Text speedText;
-    public float speedMeterMaxSpeed = 150;
+    public float speedMeterMaxSpeed = 140f;
+    public float speedMeterRotationOffset = 34f;
 
     private Rigidbody _rigidBody;
     private float _currentSpeedKMH;
@@ -78,7 +79,7 @@ public class CarBehaviour : MonoBehaviour
 	private void OnGUI()
 	{
         // Speedpointer rotation
-        float degAroundZ = 34f + _currentSpeedKMH / speedMeterMaxSpeed * (360f - 34f - 34f);
+        float degAroundZ = speedMeterRotationOffset + _currentSpeedKMH / speedMeterMaxSpeed * (360f - speedMeterRotationOffset - speedMeterRotationOffset);
         speedPointerTransform.rotation = Quaternion.Euler(0f,0f, -degAroundZ);
         // SpeedText show current KMH
         speedText.text = $"{_currentSpeedKMH:0} km/h";
