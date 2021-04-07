@@ -655,6 +655,7 @@ MonoBehaviour:
   speedPointerTransform: {fileID: 60493907}
   speedText: {fileID: 2114973995}
   speedMeterMaxSpeed: 140
+  speedMeterRotationOffset: 34
 --- !u!1 &945824238
 GameObject:
   m_ObjectHideFlags: 0
