@@ -1,44 +1,31 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public enum HorizontalDirection
-{
-    Left,
-    Straight,
-    Right
-}
-
-public enum RelativePostion
-{
-    Inner,
-    Outer
-}
+﻿using UnityEngine;
 
 public class CarFrontlightBehaviour : MonoBehaviour
 {
-    public WheelCollider wheelCol;
-    public HorizontalDirection direction;
-    public RelativePostion relativePostion;
+    public GameObject buggy;
+    public float MinAngle;
 
-    // Start is called before the first frame update
-    void Update()
+    CarBehaviour carBehaviour;
+
+	private void Start()
+	{
+        carBehaviour = buggy.GetComponent<CarBehaviour>();
+	}
+
+	// Start is called before the first frame update
+	void Update()
     {
-		// Get the wheel position and rotation from the wheelcolider
-		Quaternion quat;
-		wheelCol.GetWorldPose(out _, out quat);
+        float currentSteeringAngle = carBehaviour.SteerAngle;
+        float buggyAbsoluteRotation = buggy.transform.eulerAngles.y;
 
-        int rotationApprox = (int)(quat.y * 100) % 1000;
+        float targetAngle = buggyAbsoluteRotation + MinAngle + 0.5f * currentSteeringAngle;
 
-        if(
-            ((rotationApprox > 0 && direction == HorizontalDirection.Right) ||
-            (rotationApprox < 0 && direction == HorizontalDirection.Left)) &&
-            relativePostion == RelativePostion.Outer
-            )
-		{
-            Quaternion currentQuat = transform.rotation;
-            Quaternion nextQuat = new Quaternion(currentQuat.x, quat.y / 2, currentQuat.z, currentQuat.w);
-            transform.rotation = nextQuat;
-        }
+        Quaternion currentQuat = transform.rotation;
+        float x = currentQuat.eulerAngles.x;
+        float y = targetAngle;
+        float z = currentQuat.eulerAngles.z;
+
+        Quaternion nextQuat = Quaternion.Euler(x, y, z);
+        transform.rotation = nextQuat;
     }
 }

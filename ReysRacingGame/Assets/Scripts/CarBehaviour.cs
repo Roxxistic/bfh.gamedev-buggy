@@ -26,8 +26,13 @@ public class CarBehaviour : MonoBehaviour
     private bool _movingForwards => _rigidBody.velocity.z > 0;
     private bool _movingBackwards => _rigidBody.velocity.z < 0;
 
-    // Start is called before the first frame update
-    void Start()
+    public float CurrentSpeedKMH => _currentSpeedKMH;
+    public bool MovingForwards => _movingForwards;
+    public bool MovingBackwards => _movingBackwards;
+	public float SteerAngle { get; private set; }
+
+	// Start is called before the first frame update
+	void Start()
     {
         _rigidBody = GetComponent<Rigidbody>();
         _rigidBody.centerOfMass = centerOfMass.localPosition;
@@ -88,6 +93,7 @@ public class CarBehaviour : MonoBehaviour
     void SetSteerAngle(float angle)
 	{
         angle = AdaptSteeringIntensity(angle);
+        SteerAngle = angle;
 
         wheelColliderFL.steerAngle = angle;
         wheelColliderFR.steerAngle = angle;
