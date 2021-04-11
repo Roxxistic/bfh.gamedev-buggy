@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5937752349912402525}
   - component: {fileID: 5937752349912402524}
+  - component: {fileID: -7765634869951130930}
   m_Layer: 0
   m_Name: CarFrontlight
   m_TagString: Untagged
@@ -92,3 +93,16 @@ Light:
   m_UseBoundingSphereOverride: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+--- !u!114 &-7765634869951130930
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5937752349912402526}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eef642f00781a9e49b0c2916d5ed65ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  wheelCol: {fileID: 0}
