@@ -5,7 +5,15 @@ using UnityEngine;
 public class CarAudioBehaviour : MonoBehaviour
 {
     public AudioClip engineSingleRPMSoundClip;
+    public CarBehaviour carBehaviour;
+
     private AudioSource _engineAudioSource;
+
+    private static float _minRPM = 800;
+    private static float _maxRPM = 8000;
+    private static float _minPitch = 0.3f;
+    private static float _maxPitch = 3.0f;
+    private readonly float _slope = (_maxPitch - _minPitch) / (_maxRPM - _minRPM);
 
     // Start is called before the first frame update
     void Start()
@@ -21,8 +29,16 @@ public class CarAudioBehaviour : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
-        
+        SetEngineSound(carBehaviour.CurrentSpeedRPM);
+    }
+
+    void SetEngineSound(float engineRpm)
+	{
+        if (_engineAudioSource == null) return;
+
+        float pitch = _minPitch + _slope * engineRpm;
+        _engineAudioSource.pitch = pitch;
     }
 }
