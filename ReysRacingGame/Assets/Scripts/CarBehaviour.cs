@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using UnityEngine;
 using TMPro;
 
@@ -10,104 +9,88 @@ public class CarBehaviour : MonoBehaviour
     public WheelCollider wheelColliderBL;
     public WheelCollider wheelColliderBR;
     public Transform centerOfMass;
-    public float maxTorque = 500;
-    public float maxSteerAngle = 45;
-    public float sidewaysStiffness = 1.5f;
-    public float forewardStiffness = 1.5f;
-    public float maxSpeedKMH = 150;
-    public float maxSpeedBackwardKMH = 1;
-    public RectTransform speedPointerTransform;
-    public TMP_Text speedText;
-    public float speedMeterMaxSpeed = 140f;
-    public float speedMeterRotationOffset = 34f;
 
     private Rigidbody _rigidBody;
-    private float _currentSpeedKMH;
-    private bool _movingForwards => _rigidBody.velocity.z > 0;
-    private bool _movingBackwards => _rigidBody.velocity.z < 0;
 
-    public float CurrentSpeedKMH => _currentSpeedKMH;
-    public bool MovingForwards => _movingForwards;
-    public bool MovingBackwards => _movingBackwards;
-	public float SteerAngle { get; private set; }
+    public float sidewaysStiffness = 1.5f;
+    public float forewardStiffness = 1.5f;
+    public float maxTorque = 500;
+    public float maxSteerAngle = 45;
+    public float maxSpeedKMH = 150;
+    public float maxSpeedBackwardKMH = 1;
+    public float speedMeterMaxSpeed = 140f;
+    public float speedMeterRotationOffset = 34f;
+    public bool thrustEnabled = false;
 
-	// Start is called before the first frame update
-	void Start()
+    public float CurrentSpeedKMH => _rigidBody.velocity.magnitude * 3.6f;
+    public float SteerAngle { get; private set; }
+    public bool MovingForwards => _rigidBody.velocity.z > 0;
+    public bool MovingBackwards => _rigidBody.velocity.z < 0;
+    // Determine if the car is driving forwards or backwards
+    public bool VelocityIsForeward => Vector3.Angle(transform.forward, _rigidBody.velocity) < 50f;
+    // Determine if the cursor key input means braking
+    public bool DoBraking => CurrentSpeedKMH > 0.5f && (Input.GetAxis("Vertical") < 0 && VelocityIsForeward || Input.GetAxis("Vertical") > 0 && !VelocityIsForeward);
+
+    // Start is called before the first frame update
+    void Start()
     {
         _rigidBody = GetComponent<Rigidbody>();
         _rigidBody.centerOfMass = centerOfMass.localPosition;
 
-        SetWheelFrictionStiffness(forewardStiffness, sidewaysStiffness);
+        SetWheelFrictionStiffness();
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        _currentSpeedKMH = _rigidBody.velocity.magnitude * 3.6f;
-
-        // Determine if the car is driving forwards or backwards
-        bool velocityIsForeward = Vector3.Angle(transform.forward, _rigidBody.velocity) < 50f;
-        // Determine if the cursor key input means braking
-        bool doBraking = _currentSpeedKMH > 0.5f && (Input.GetAxis("Vertical") < 0 && velocityIsForeward || Input.GetAxis("Vertical") > 0 && !velocityIsForeward);
-        if (doBraking)
-        {
-            wheelColliderFL.brakeTorque = 5000;
-            wheelColliderFR.brakeTorque = 5000;
-            wheelColliderBL.brakeTorque = 5000;
-            wheelColliderBR.brakeTorque = 5000;
-            wheelColliderFL.motorTorque = 0;
-            wheelColliderFR.motorTorque = 0;
-        }
-        else
-        {
-            wheelColliderFL.brakeTorque = 0;
-            wheelColliderFR.brakeTorque = 0;
-            wheelColliderBL.brakeTorque = 0;
-            wheelColliderBR.brakeTorque = 0;
-
-            // TODO: limit velocity
-            if((velocityIsForeward && _currentSpeedKMH < maxSpeedKMH) || (!velocityIsForeward && _currentSpeedKMH < maxSpeedBackwardKMH)) {
-                wheelColliderFL.motorTorque = maxTorque * Input.GetAxis("Vertical");
-                
-                wheelColliderFR.motorTorque = wheelColliderFL.motorTorque;
-            } else
-			{
-                wheelColliderFL.motorTorque = 0;
-                wheelColliderFR.motorTorque = 0;
-            }
-        }
-
-        //SetMotorTorque(maxTorque * Input.GetAxis("Vertical"));
-        SetSteerAngle(maxSteerAngle * Input.GetAxis("Horizontal"));
+        SetBrakeTorque();
+        SetMotorTorque();
+        SetSteerAngle();
     }
 
-	private void OnGUI()
+    private void SetMotorTorque()
 	{
-        // Speedpointer rotation
-        float degAroundZ = speedMeterRotationOffset + _currentSpeedKMH / speedMeterMaxSpeed * (360f - speedMeterRotationOffset - speedMeterRotationOffset);
-        speedPointerTransform.rotation = Quaternion.Euler(0f,0f, -degAroundZ);
-        // SpeedText show current KMH
-        speedText.text = $"{_currentSpeedKMH:0} km/h";
+        float torque = 0;
+
+        bool maxForwardSpeedNotExceeded = VelocityIsForeward && CurrentSpeedKMH < maxSpeedKMH;
+        bool maxBackwardSpeedNotExceeded = !VelocityIsForeward && CurrentSpeedKMH < maxSpeedBackwardKMH;
+
+        if ((maxBackwardSpeedNotExceeded || maxForwardSpeedNotExceeded) && !DoBraking && thrustEnabled)
+        {
+            torque = maxTorque * Input.GetAxis("Vertical");
+        }
+
+        wheelColliderFL.motorTorque = torque;
+        wheelColliderFR.motorTorque = torque;
     }
 
-    void SetSteerAngle(float angle)
+    private void SetBrakeTorque()
 	{
-        angle = AdaptSteeringIntensity(angle);
-        SteerAngle = angle;
+        float torque = DoBraking ? 5000 : 0;
 
-        wheelColliderFL.steerAngle = angle;
-        wheelColliderFR.steerAngle = angle;
+        wheelColliderFL.brakeTorque = torque;
+        wheelColliderFR.brakeTorque = torque;
+        wheelColliderBL.brakeTorque = torque;
+        wheelColliderBR.brakeTorque = torque;
+    }
+
+    private void SetSteerAngle()
+	{
+        SteerAngle = maxSteerAngle * Input.GetAxis("Horizontal");
+
+        // Adapt steering intensity.
+        // The faster the car, the less it can steer to left/right. 
+        // Current speed to Max speed ratio, inverted (1-value) to get a smaller number when current speed is higher.
+        // Use 1.1f instead of 1f, so when current speed is equal to max speed, angleLock is not 0 (which would prevent the car from steering at max speed).
+        // Also apply Min(1, value), to not get a value above 1, should the current speed be very low.
+        float angleLock = Math.Min(1.1f - (CurrentSpeedKMH / maxSpeedKMH), 1);
+        SteerAngle *= angleLock;
+
+        wheelColliderFL.steerAngle = SteerAngle;
+        wheelColliderFR.steerAngle = SteerAngle;
 	}
 
-    void SetMotorTorque(float amount)
-	{
-        //amount = LimitSpeed(amount);
-
-        wheelColliderFL.motorTorque = amount;
-        wheelColliderFR.motorTorque = amount;
-	}
-
-    void SetWheelFrictionStiffness(float forewardStiffness, float sidewaysStiffness)
+    private void SetWheelFrictionStiffness()
 	{
         // Leider lässt sich das stiffness-Property nicht direkt setzen, sodass wir über ein WheelFrictionCurve Objekt gehen müssen.
         WheelFrictionCurve f_fwWFC = wheelColliderFL.forwardFriction; 
@@ -125,32 +108,5 @@ public class CarBehaviour : MonoBehaviour
         wheelColliderBL.sidewaysFriction = f_swWFC;
         wheelColliderBR.forwardFriction = f_fwWFC;
         wheelColliderBR.sidewaysFriction = f_swWFC;
-    }
-
-    float LimitSpeed(float nextSpeed)
-	{
-        Debug.Log($"Forward: {_movingForwards}. Backward: {_movingBackwards}. CurrentSpeed: {_currentSpeedKMH}. NextSpeed: {nextSpeed}.");
-        if (_movingForwards && nextSpeed > 0 && _currentSpeedKMH >= maxSpeedKMH)
-		{
-            Debug.Log("Reduce forward");
-            return 0f;
-		}
-        if(_movingBackwards && nextSpeed < 0 && _currentSpeedKMH >= maxSpeedBackwardKMH)
-		{
-            Debug.Log("Reduce backward");
-            return 0f;
-		}
-        Debug.Log("Reduce none");
-        return nextSpeed;
-	}
-
-    float AdaptSteeringIntensity(float angle)
-	{
-        // The faster the car, the less it can steer to left/right. 
-        // Current speed to Max speed ratio, inverted (1-value) to get a smaller number when current speed is higher.
-        // Use 1.1f instead of 1f, so when current speed is equal to max speed, angleLock is not 0 (which would prevent the car from steering at max speed).
-        // Also apply Min(1, value), to not get a value above 1, should the current speed be very low.
-        float angleLock = Math.Min(1.1f - (_currentSpeedKMH / maxSpeedKMH), 1);
-        return angle * angleLock;
     }
 }

@@ -218,7 +218,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1449073937}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -6150,16 +6150,15 @@ MonoBehaviour:
   wheelColliderBL: {fileID: 1747306944}
   wheelColliderBR: {fileID: 1914599979}
   centerOfMass: {fileID: 1659758757}
-  maxTorque: 1500
-  maxSteerAngle: 45
   sidewaysStiffness: 1.5
   forewardStiffness: 1.5
+  maxTorque: 1500
+  maxSteerAngle: 45
   maxSpeedKMH: 150
   maxSpeedBackwardKMH: 5
-  speedPointerTransform: {fileID: 60493907}
-  speedText: {fileID: 2114973995}
   speedMeterMaxSpeed: 140
   speedMeterRotationOffset: 34
+  thrustEnabled: 0
 --- !u!1 &879087712
 GameObject:
   m_ObjectHideFlags: 0
@@ -7236,6 +7235,7 @@ GameObject:
   - component: {fileID: 1449073937}
   - component: {fileID: 1449073939}
   - component: {fileID: 1449073938}
+  - component: {fileID: 1449073940}
   m_Layer: 5
   m_Name: SpeedMeter
   m_TagString: Untagged
@@ -7254,8 +7254,8 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 60493907}
   - {fileID: 2114973994}
+  - {fileID: 60493907}
   m_Father: {fileID: 311064784}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -7301,6 +7301,23 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1449073936}
   m_CullTransparentMesh: 0
+--- !u!114 &1449073940
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1449073936}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9636c0a7dbff58e47bdd40d3bf99215c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  buggy: {fileID: 730478455}
+  speedPointerTransform: {fileID: 60493907}
+  speedText: {fileID: 2114973995}
+  speedMeterMaxSpeed: 140
+  speedMeterRotationOffset: 34
 --- !u!1001 &1525598097
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10489,7 +10506,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1449073937}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
