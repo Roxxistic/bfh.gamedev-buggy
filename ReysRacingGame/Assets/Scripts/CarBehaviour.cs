@@ -1,6 +1,37 @@
 ﻿using System;
 using UnityEngine;
-using TMPro;
+using System.Collections.Generic;
+
+class Gear
+{
+    private float _minRPM;
+    private float _minKMH;
+    private float _maxRPM;
+    private float _maxKMH;
+    public readonly int GearNumber;
+    private readonly float _slope;
+
+    public Gear(int gearNumber, float minKMH, float minRPM, float maxKMH, float maxRPM)
+    {
+        _minRPM = minRPM;
+        _minKMH = minKMH;
+        _maxRPM = maxRPM;
+        _maxKMH = maxKMH;
+        GearNumber = gearNumber;
+        _slope = (_maxRPM - _minRPM) / (_maxKMH - _minKMH);
+    }
+    
+
+    public bool speedFits(float kmh)
+    {
+        return kmh >= _minKMH && kmh <= _maxKMH;
+    }
+
+    public float interpolate(float kmh)
+    {
+        return _minRPM + (kmh - _minKMH) * _slope;
+    }
+}
 
 public class CarBehaviour : MonoBehaviour
 {
@@ -11,6 +42,15 @@ public class CarBehaviour : MonoBehaviour
     public Transform centerOfMass;
 
     private Rigidbody _rigidBody;
+
+    private List<Gear> _gears = new List<Gear> {
+        new Gear(1, 1, 900, 12, 1400),
+        new Gear(2, 12, 900, 25, 2000),
+        new Gear(3, 25, 1350, 45, 2500),
+        new Gear(4, 45, 1950, 70, 3500),
+        new Gear(5, 70, 2500, 112, 4000),
+        new Gear(6, 112, 3100, 180, 5000)
+    };
 
     public float sidewaysStiffness = 1.5f;
     public float forewardStiffness = 1.5f;
@@ -30,6 +70,10 @@ public class CarBehaviour : MonoBehaviour
     public bool VelocityIsForeward => Vector3.Angle(transform.forward, _rigidBody.velocity) < 50f;
     // Determine if the cursor key input means braking
     public bool DoBraking => CurrentSpeedKMH > 0.5f && (Input.GetAxis("Vertical") < 0 && VelocityIsForeward || Input.GetAxis("Vertical") > 0 && !VelocityIsForeward);
+
+    Gear CurrentGear => _gears.Find(g => g.speedFits(CurrentSpeedKMH)) ?? _gears.Find(g => g.GearNumber == 1);
+    public float CurrentSpeedRPM => CurrentGear.interpolate(CurrentSpeedKMH);
+    public int CurrentGearNumber => CurrentGear.GearNumber;
 
     // Start is called before the first frame update
     void Start()
