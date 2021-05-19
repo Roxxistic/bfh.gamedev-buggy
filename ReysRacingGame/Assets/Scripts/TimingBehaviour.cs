@@ -5,6 +5,7 @@ public class TimingBehaviour : MonoBehaviour
 {
     public int countMax = 3;
     private CarBehaviour _carScript;
+    public SpeedMeterBehaviour speedMeter;
     
     public int CountDown { get; private set; }
 
@@ -19,9 +20,12 @@ public class TimingBehaviour : MonoBehaviour
 
     IEnumerator GameStart()
 	{
+        speedMeter.countdownValueInSec = countMax;
+
         for (CountDown = countMax; CountDown > 0; CountDown--)
 		{
             yield return new WaitForSeconds(1);
+            speedMeter.countdownValueInSec--;
 		}
 
         _carScript.thrustEnabled = true;

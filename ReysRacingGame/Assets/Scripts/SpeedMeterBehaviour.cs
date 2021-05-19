@@ -6,6 +6,10 @@ public class SpeedMeterBehaviour : MonoBehaviour
     public GameObject buggy;
     public RectTransform speedPointerTransform;
     public TMP_Text speedText;
+    public TMP_Text countdownText;
+    public TimingBehaviour timingBehaviour;
+
+    public int countdownValueInSec;
 
     private CarBehaviour _carBehaviour;   
 
@@ -21,6 +25,7 @@ public class SpeedMeterBehaviour : MonoBehaviour
 	{
         SetPointerPosition();
         SetSpeedText();
+        SetCountdownText();
 	}
 
     private void SetPointerPosition()
@@ -33,6 +38,11 @@ public class SpeedMeterBehaviour : MonoBehaviour
     {
         speedText.text = $"{_carBehaviour.CurrentSpeedKMH:0} km/h";
     }
+
+    private void SetCountdownText()
+	{
+        countdownText.text = $"{countdownValueInSec} sec.";
+	}
 
     private void SetStopWatch()
 	{
