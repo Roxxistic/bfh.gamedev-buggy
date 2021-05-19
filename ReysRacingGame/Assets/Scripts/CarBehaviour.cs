@@ -60,7 +60,7 @@ public class CarBehaviour : MonoBehaviour
     public float maxSpeedBackwardKMH = 1;
     public float speedMeterMaxSpeed = 140f;
     public float speedMeterRotationOffset = 34f;
-    public bool thrustEnabled = false;
+    private bool thrustEnabled = false;
 
     public float CurrentSpeedKMH => _rigidBody.velocity.magnitude * 3.6f;
     public float SteerAngle { get; private set; }
@@ -75,6 +75,8 @@ public class CarBehaviour : MonoBehaviour
     public float CurrentSpeedRPM => CurrentGear.interpolate(CurrentSpeedKMH);
     public int CurrentGearNumber => CurrentGear.GearNumber;
 
+    public TimingCountdownBehaviour timingBehaviour;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -87,9 +89,15 @@ public class CarBehaviour : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
+        SetThrustEnabled();
         SetBrakeTorque();
         SetMotorTorque();
         SetSteerAngle();
+    }
+
+    private void SetThrustEnabled()
+	{
+        thrustEnabled = timingBehaviour.IsCountdownDone;
     }
 
     private void SetMotorTorque()

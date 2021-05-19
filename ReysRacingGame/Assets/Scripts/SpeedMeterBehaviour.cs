@@ -6,11 +6,10 @@ public class SpeedMeterBehaviour : MonoBehaviour
     public GameObject buggy;
     public RectTransform speedPointerTransform;
     public TMP_Text speedText;
-    public TMP_Text countdownText;
-    public TimingBehaviour timingBehaviour;
+    public TMP_Text timeText;
+    public TimingCountdownBehaviour countdownBehaviour;
 
-    public int countdownValueInSec;
-
+    private CarStopwatchBehaviour _carStopwatch;
     private CarBehaviour _carBehaviour;   
 
     public float speedMeterMaxSpeed = 140f;
@@ -19,13 +18,14 @@ public class SpeedMeterBehaviour : MonoBehaviour
     void Start()
     {
         _carBehaviour = buggy.GetComponent<CarBehaviour>();
+        _carStopwatch = buggy.GetComponent<CarStopwatchBehaviour>();
     }
 
     private void OnGUI()
 	{
         SetPointerPosition();
         SetSpeedText();
-        SetCountdownText();
+        SetTimeText();
 	}
 
     private void SetPointerPosition()
@@ -39,13 +39,20 @@ public class SpeedMeterBehaviour : MonoBehaviour
         speedText.text = $"{_carBehaviour.CurrentSpeedKMH:0} km/h";
     }
 
-    private void SetCountdownText()
+    private void SetTimeText()
 	{
-        countdownText.text = $"{countdownValueInSec} sec.";
-	}
+        if (!countdownBehaviour.IsCountdownDone) {
+            timeText.text = $"{countdownBehaviour.CountDown} sec.";
+        }
 
-    private void SetStopWatch()
-	{
-        // TODO!
-	}
+        if(countdownBehaviour.IsCountdownDone && !_carStopwatch.IsRunning && _carStopwatch.PastTime < 1)
+		{
+            timeText.text = $"GO!";
+        }
+
+        if (_carStopwatch.IsRunning)
+        {
+            timeText.text = $"{_carStopwatch.PastTime:0.0} sec.";
+        }
+    }
 }

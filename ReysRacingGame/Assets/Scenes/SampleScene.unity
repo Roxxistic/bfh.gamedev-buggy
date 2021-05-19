@@ -5778,7 +5778,7 @@ GameObject:
   - component: {fileID: 588998118}
   m_Layer: 0
   m_Name: Collider2
-  m_TagString: Untagged
+  m_TagString: Car
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6203,7 +6203,7 @@ MonoBehaviour:
   maxSpeedBackwardKMH: 5
   speedMeterMaxSpeed: 140
   speedMeterRotationOffset: 34
-  thrustEnabled: 0
+  timingBehaviour: {fileID: 730478460}
 --- !u!114 &730478459
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6232,7 +6232,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   countMax: 3
-  speedMeter: {fileID: 1449073940}
 --- !u!114 &730478461
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6247,6 +6246,39 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   countdownSoundClip: {fileID: 8300000, guid: beb8822172501fd44ad88847da892a1e, type: 3}
   timingBehaviourScript: {fileID: 730478460}
+--- !u!114 &730478462
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 730478455}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8bf5821121d18d046a3106ade018d54c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  IsRunning: 0
+--- !u!1 &794284044 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3981730384765168581, guid: ad1986f7fe2fd6d43b683bea337fbea6,
+    type: 3}
+  m_PrefabInstance: {fileID: 1754938726}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &794284046
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 794284044}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4966c63d0105994f9cd022f2db388d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  IsStartGate: 1
+  IsEndGate: 0
 --- !u!1 &879087712
 GameObject:
   m_ObjectHideFlags: 0
@@ -6975,6 +7007,26 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 936197360}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1147389110 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3981730384765168581, guid: ad1986f7fe2fd6d43b683bea337fbea6,
+    type: 3}
+  m_PrefabInstance: {fileID: 963915692}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1147389112
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1147389110}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4966c63d0105994f9cd022f2db388d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  IsStartGate: 0
+  IsEndGate: 1
 --- !u!1 &1160788614
 GameObject:
   m_ObjectHideFlags: 0
@@ -7306,7 +7358,7 @@ GameObject:
   - component: {fileID: 1400008607}
   - component: {fileID: 1400008606}
   m_Layer: 5
-  m_Name: CountdownText
+  m_Name: TimeText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7539,9 +7591,8 @@ MonoBehaviour:
   buggy: {fileID: 730478455}
   speedPointerTransform: {fileID: 60493907}
   speedText: {fileID: 2114973995}
-  countdownText: {fileID: 1400008606}
-  timingBehaviour: {fileID: 0}
-  countdownValueInSec: 0
+  timeText: {fileID: 1400008606}
+  countdownBehaviour: {fileID: 730478460}
   speedMeterMaxSpeed: 140
   speedMeterRotationOffset: 34
 --- !u!1001 &1525598097
@@ -12633,6 +12684,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: buggy
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: c57796a4c1a428f4a925020fc99aab1a,
+        type: 3}
+      propertyPath: m_TagString
+      value: Car
       objectReference: {fileID: 0}
     - target: {fileID: 2715205113133964093, guid: c57796a4c1a428f4a925020fc99aab1a,
         type: 3}

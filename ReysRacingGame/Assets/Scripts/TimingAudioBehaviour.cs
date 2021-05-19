@@ -5,7 +5,7 @@ using UnityEngine;
 public class TimingAudioBehaviour : MonoBehaviour
 {
     public AudioClip countdownSoundClip;
-    public TimingBehaviour timingBehaviourScript;
+    public TimingCountdownBehaviour timingBehaviourScript;
 
     private AudioSource _audioSource;
     private int _previousCountdown = -1;
