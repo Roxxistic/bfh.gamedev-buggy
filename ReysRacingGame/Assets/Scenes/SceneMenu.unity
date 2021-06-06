@@ -121,6 +121,24 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &27868305 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1500506134184202297, guid: 8cdf6ec4aff88984b8275019edfede91,
+    type: 3}
+  m_PrefabInstance: {fileID: 1084036745}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &27868306
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 27868305}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e5c8f92e8ce032419fa1d8ec1b59c81, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &354304697
 GameObject:
   m_ObjectHideFlags: 0
@@ -198,6 +216,31 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: buggy
+      objectReference: {fileID: 0}
+    - target: {fileID: 1734932250895825482, guid: 8cdf6ec4aff88984b8275019edfede91,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1734932251823910252, guid: 8cdf6ec4aff88984b8275019edfede91,
+        type: 3}
+      propertyPath: m_AABB.m_Extent.x
+      value: 0.26366556
+      objectReference: {fileID: 0}
+    - target: {fileID: 1734932251823910252, guid: 8cdf6ec4aff88984b8275019edfede91,
+        type: 3}
+      propertyPath: m_AABB.m_Extent.z
+      value: 0.000000029802322
+      objectReference: {fileID: 0}
+    - target: {fileID: 1734932251823910254, guid: 8cdf6ec4aff88984b8275019edfede91,
+        type: 3}
+      propertyPath: m_AABB.m_Extent.x
+      value: 0.26366556
+      objectReference: {fileID: 0}
+    - target: {fileID: 1734932251823910254, guid: 8cdf6ec4aff88984b8275019edfede91,
+        type: 3}
+      propertyPath: m_AABB.m_Extent.z
+      value: 0.000000029802322
       objectReference: {fileID: 0}
     - target: {fileID: 2276867362892827267, guid: 8cdf6ec4aff88984b8275019edfede91,
         type: 3}
