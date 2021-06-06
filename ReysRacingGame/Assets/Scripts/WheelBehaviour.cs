@@ -5,6 +5,7 @@ using UnityEngine;
 public class WheelBehaviour : MonoBehaviour
 {
     public WheelCollider wheelCol;
+    public bool rotationEnabled = true;
 
     // Update is called once per frame
     void Update()
@@ -13,7 +14,12 @@ public class WheelBehaviour : MonoBehaviour
 		Quaternion quat; 
         Vector3 position; 
         wheelCol.GetWorldPose(out position, out quat); 
-        transform.position = position; 
-        transform.rotation = quat;
+        transform.position = position;
+
+		if (rotationEnabled)
+		{
+            transform.rotation = quat;
+        }
+        
     }
 }
