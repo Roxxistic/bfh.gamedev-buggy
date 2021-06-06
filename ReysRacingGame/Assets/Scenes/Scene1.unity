@@ -1166,6 +1166,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b296bb35d9c3b5f46b23bffff1b293cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  wheelColliderFL: {fileID: 1734932250283838775}
+  wheelColliderFR: {fileID: 1734932250283838774}
+  wheelColliderRL: {fileID: 1734932250283838773}
+  wheelColliderRR: {fileID: 1734932250283838772}
+  buggy: {fileID: 1734932250283838771}
+  FlagLeft: {fileID: 1734932250283838770}
+  FlagRight: {fileID: 1900769599}
 --- !u!1001 &963915692
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1966,6 +1973,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f9ec4219b4d0d414fb84988d28dbf504, type: 3}
+--- !u!1 &1900769599 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3295549179152508021, guid: 8cdf6ec4aff88984b8275019edfede91,
+    type: 3}
+  m_PrefabInstance: {fileID: 1734932250283838768}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2002011583
 GameObject:
   m_ObjectHideFlags: 0
@@ -2436,6 +2449,42 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8cdf6ec4aff88984b8275019edfede91, type: 3}
+--- !u!1 &1734932250283838770 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4025527826835943412, guid: 8cdf6ec4aff88984b8275019edfede91,
+    type: 3}
+  m_PrefabInstance: {fileID: 1734932250283838768}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1734932250283838771 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5083892085687958619, guid: 8cdf6ec4aff88984b8275019edfede91,
+    type: 3}
+  m_PrefabInstance: {fileID: 1734932250283838768}
+  m_PrefabAsset: {fileID: 0}
+--- !u!146 &1734932250283838772 stripped
+WheelCollider:
+  m_CorrespondingSourceObject: {fileID: 1734932252130277147, guid: 8cdf6ec4aff88984b8275019edfede91,
+    type: 3}
+  m_PrefabInstance: {fileID: 1734932250283838768}
+  m_PrefabAsset: {fileID: 0}
+--- !u!146 &1734932250283838773 stripped
+WheelCollider:
+  m_CorrespondingSourceObject: {fileID: 1734932252030944496, guid: 8cdf6ec4aff88984b8275019edfede91,
+    type: 3}
+  m_PrefabInstance: {fileID: 1734932250283838768}
+  m_PrefabAsset: {fileID: 0}
+--- !u!146 &1734932250283838774 stripped
+WheelCollider:
+  m_CorrespondingSourceObject: {fileID: 1734932250273859133, guid: 8cdf6ec4aff88984b8275019edfede91,
+    type: 3}
+  m_PrefabInstance: {fileID: 1734932250283838768}
+  m_PrefabAsset: {fileID: 0}
+--- !u!146 &1734932250283838775 stripped
+WheelCollider:
+  m_CorrespondingSourceObject: {fileID: 1734932250619317615, guid: 8cdf6ec4aff88984b8275019edfede91,
+    type: 3}
+  m_PrefabInstance: {fileID: 1734932250283838768}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &7212905765872272689
 PrefabInstance:
   m_ObjectHideFlags: 0
