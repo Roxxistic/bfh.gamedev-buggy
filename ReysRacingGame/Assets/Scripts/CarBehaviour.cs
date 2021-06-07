@@ -60,7 +60,10 @@ public class CarBehaviour : MonoBehaviour
     public float maxSpeedBackwardKMH = 1;
     public float speedMeterMaxSpeed = 140f;
     public float speedMeterRotationOffset = 34f;
+    public float maxBrakeTorque = 500;
+        
     private bool thrustEnabled = false;
+
 
     public float CurrentSpeedKMH => _rigidBody.velocity.magnitude * 3.6f;
     public float SteerAngle { get; private set; }
@@ -70,6 +73,7 @@ public class CarBehaviour : MonoBehaviour
     public bool VelocityIsForeward => Vector3.Angle(transform.forward, _rigidBody.velocity) < 50f;
     // Determine if the cursor key input means braking
     public bool DoBraking => CurrentSpeedKMH > 0.5f && (Input.GetAxis("Vertical") < 0 && VelocityIsForeward || Input.GetAxis("Vertical") > 0 && !VelocityIsForeward);
+    public bool DoFullBrake => Input.GetKey("space");
 
     Gear CurrentGear => _gears.Find(g => g.speedFits(CurrentSpeedKMH)) ?? _gears.Find(g => g.GearNumber == 1);
     public float CurrentSpeedRPM => CurrentGear.interpolate(CurrentSpeedKMH);
@@ -86,7 +90,7 @@ public class CarBehaviour : MonoBehaviour
     // Full breaking and skidmarking
     public float fullBrakeTorque = 5000; 
     public AudioClip brakeAudioClip;
-    private bool _doSkidmarking; 
+    private bool _doSkidmarking => _carIsNotOnSand && DoFullBrake && CurrentSpeedKMH > 20.0f; 
     private bool _carIsNotOnSand;
     private AudioSource _brakeAudioSource;
 
@@ -117,6 +121,7 @@ public class CarBehaviour : MonoBehaviour
 
         SetThrustEnabled();
         SetBrakeTorque();
+        SetBrakeSound(_doSkidmarking);
         SetMotorTorque();
         SetSteerAngle();
     }
@@ -133,7 +138,7 @@ public class CarBehaviour : MonoBehaviour
         bool maxForwardSpeedNotExceeded = VelocityIsForeward && CurrentSpeedKMH < maxSpeedKMH;
         bool maxBackwardSpeedNotExceeded = !VelocityIsForeward && CurrentSpeedKMH < maxSpeedBackwardKMH;
 
-        if ((maxBackwardSpeedNotExceeded || maxForwardSpeedNotExceeded) && !DoBraking && thrustEnabled)
+        if ((maxBackwardSpeedNotExceeded || maxForwardSpeedNotExceeded) && !DoBraking && !DoFullBrake && thrustEnabled)
         {
             torque = maxTorque * Input.GetAxis("Vertical");
         }
@@ -144,12 +149,30 @@ public class CarBehaviour : MonoBehaviour
 
     private void SetBrakeTorque()
 	{
-        float torque = DoBraking ? 5000 : 0;
+        float torque = 0;
+		if (DoFullBrake)
+		{
+            torque = fullBrakeTorque;
+		}
+		if (DoBraking)
+		{
+            torque = maxBrakeTorque;
+		}
 
         wheelColliderFL.brakeTorque = torque;
         wheelColliderFR.brakeTorque = torque;
         wheelColliderBL.brakeTorque = torque;
         wheelColliderBR.brakeTorque = torque;
+    }
+
+    private void SetBrakeSound(bool doBrakeSound)
+	{
+        if (doBrakeSound)
+        {
+            _brakeAudioSource.volume = CurrentSpeedKMH / 100.0f;
+            _brakeAudioSource.Play();
+        }
+        else _brakeAudioSource.Stop();
     }
 
     private void SetSteerAngle()
