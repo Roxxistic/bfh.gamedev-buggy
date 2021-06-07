@@ -21663,6 +21663,11 @@ PrefabInstance:
       propertyPath: EmissionModule.rateOverTime.scalar
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1734932250895825482, guid: 8cdf6ec4aff88984b8275019edfede91,
+        type: 3}
+      propertyPath: brakeAudioClip
+      value: 
+      objectReference: {fileID: 8300000, guid: ef4c81adb999f00478808ae5d518a225, type: 3}
     - target: {fileID: 1734932251821768470, guid: 8cdf6ec4aff88984b8275019edfede91,
         type: 3}
       propertyPath: EmissionModule.rateOverTime.scalar
