@@ -41,6 +41,8 @@ public class CarBehaviour : MonoBehaviour
     public WheelCollider wheelColliderBR;
     public Transform centerOfMass;
 
+    public WheelBehaviour[] wheelBehaviours = new WheelBehaviour[4];
+
     private Rigidbody _rigidBody;
 
     private List<Gear> _gears = new List<Gear> {
@@ -122,6 +124,7 @@ public class CarBehaviour : MonoBehaviour
         SetThrustEnabled();
         SetBrakeTorque();
         SetBrakeSound(_doSkidmarking);
+        SetSkidmarking(_doSkidmarking);
         SetMotorTorque();
         SetSteerAngle();
     }
@@ -173,6 +176,14 @@ public class CarBehaviour : MonoBehaviour
             _brakeAudioSource.Play();
         }
         else _brakeAudioSource.Stop();
+    }
+
+    private void SetSkidmarking(bool doSkidmarking)
+	{
+        foreach (var wheel in wheelBehaviours)
+		{
+            wheel.DoSkidmarking(doSkidmarking);
+        }
     }
 
     private void SetSteerAngle()
