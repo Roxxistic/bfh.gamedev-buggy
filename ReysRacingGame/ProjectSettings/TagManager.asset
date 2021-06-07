@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Water
   - Car
+  - Terrain
   layers:
   - Default
   - TransparentFX

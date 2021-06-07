@@ -77,6 +77,19 @@ public class CarBehaviour : MonoBehaviour
 
     public TimingCountdownBehaviour timingBehaviour;
 
+    public bool _carIsOnDrySand;
+    private  string _groundTagFL;
+    private int _groundTextureFL;
+    private string _groundTagFR;
+    private int _groundTextureFR;
+
+    // Full breaking and skidmarking
+    public float fullBrakeTorque = 5000; 
+    public AudioClip brakeAudioClip;
+    private bool _doSkidmarking; 
+    private bool _carIsNotOnSand;
+    private AudioSource _brakeAudioSource;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -84,11 +97,24 @@ public class CarBehaviour : MonoBehaviour
         _rigidBody.centerOfMass = centerOfMass.localPosition;
 
         SetWheelFrictionStiffness();
+
+        // Configure brake audiosource component by program
+        _brakeAudioSource = (AudioSource)gameObject.AddComponent<AudioSource>(); 
+        _brakeAudioSource.clip = brakeAudioClip; 
+        _brakeAudioSource.loop = true; 
+        _brakeAudioSource.volume = 0.7f; 
+        _brakeAudioSource.playOnAwake = false;
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
+        // Evaluate ground under front wheels
+        WheelHit hitFL = GetGroundInfos(ref wheelColliderFL, ref _groundTagFL, ref _groundTextureFL);
+        WheelHit hitFR = GetGroundInfos(ref wheelColliderFR, ref _groundTagFR, ref _groundTextureFR);
+        _carIsOnDrySand = _groundTagFL.CompareTo("Terrain") == 0 && _groundTextureFL == 3;
+        _carIsNotOnSand = !(_groundTagFL.CompareTo("Terrain") == 0 && (_groundTextureFL <= 1));
+
         SetThrustEnabled();
         SetBrakeTorque();
         SetMotorTorque();
@@ -160,5 +186,64 @@ public class CarBehaviour : MonoBehaviour
         wheelColliderBL.sidewaysFriction = f_swWFC;
         wheelColliderBR.forwardFriction = f_fwWFC;
         wheelColliderBR.sidewaysFriction = f_swWFC;
+    }
+
+    // Returns the wheel hit collider, the tag and main texture of the passed wheel collider
+    WheelHit GetGroundInfos(ref WheelCollider wheelCol, ref string groundTag, ref int groundTextureIndex)
+	{
+        // Default values
+        groundTag = "InTheAir";
+        groundTextureIndex = -1;
+
+        // Query ground by ray shoot on the front left wheel collider
+        WheelHit wheelHit;
+        wheelCol.GetGroundHit(out wheelHit);
+
+        // If not in the air query collider
+        if (wheelHit.collider)
+		{
+            groundTag = wheelHit.collider.tag;
+			if (wheelHit.collider.CompareTag("Terrain"))
+			{
+                groundTextureIndex = TerrainSurface.GetMainTexture(transform.position);
+			}
+		}
+        return wheelHit;
+	}
+}
+
+public class TerrainSurface
+{
+    public static float[] GetTextureMix(Vector3 worldPosition)
+	{
+        Terrain terrain = Terrain.activeTerrain;
+        TerrainData terrainData = terrain.terrainData;
+        Vector3 terrainPosition = terrain.transform.position;
+
+        // calculate which splat map cell the worldPos falls within (ignoring y)
+        int mapX = (int)(((worldPosition.x- terrainPosition.x)/ terrainData.size.x) * terrainData.alphamapWidth);
+        int mapZ = (int)(((worldPosition.z- terrainPosition.z)/ terrainData.size.z) * terrainData.alphamapHeight);
+        // get the splat data for this cell as 1x1xN 3d array (where N=number of textures)
+        float[,,] splatMapData = terrainData.GetAlphamaps(mapX,mapZ,1,1);
+        // extract the 3D array data to a 1D array:
+        float[] cellMix = new float[splatMapData.GetUpperBound(2) + 1];
+        for (int n = 0; n < cellMix.Length; ++n) cellMix[n] = splatMapData[0, 0, n];
+        return cellMix;
+    }
+
+    public static int GetMainTexture(Vector3 worldPos)
+    {
+        float[] mix = GetTextureMix(worldPos);
+        float maxMix = 0;
+        int maxIndex = 0;
+
+        // loop through each mix value and find the maximum
+        for (int n=0; n < mix.Length; ++n) {
+            if (mix[n] > maxMix) {
+                maxIndex = n;
+                maxMix = mix[n];
+            }
+        }
+        return maxIndex;
     }
 }
