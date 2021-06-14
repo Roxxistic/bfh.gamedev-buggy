@@ -63,6 +63,8 @@ public class CarBehaviour : MonoBehaviour
     public float speedMeterMaxSpeed = 140f;
     public float speedMeterRotationOffset = 34f;
     public float maxBrakeTorque = 500;
+
+    public float torque = 0.0f;
         
     private bool thrustEnabled = false;
 
@@ -115,28 +117,48 @@ public class CarBehaviour : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        // Evaluate ground under front wheels
-        WheelHit hitFL = GetGroundInfos(ref wheelColliderFL, ref _groundTagFL, ref _groundTextureFL);
-        WheelHit hitFR = GetGroundInfos(ref wheelColliderFR, ref _groundTagFR, ref _groundTextureFR);
-        _carIsOnDrySand = _groundTagFL.CompareTo("Terrain") == 0 && _groundTextureFL == 3;
-        _carIsNotOnSand = !(_groundTagFL.CompareTo("Terrain") == 0 && (_groundTextureFL <= 1));
 
-        SetThrustEnabled();
-        SetBrakeTorque();
-        SetBrakeSound(_doSkidmarking);
-        SetSkidmarking(_doSkidmarking);
-        SetMotorTorque();
-        SetSteerAngle();
+            // Evaluate ground under front wheels
+            WheelHit hitFL = GetGroundInfos(ref wheelColliderFL, ref _groundTagFL, ref _groundTextureFL);
+            WheelHit hitFR = GetGroundInfos(ref wheelColliderFR, ref _groundTagFR, ref _groundTextureFR);
+            _carIsOnDrySand = _groundTagFL.CompareTo("Terrain") == 0 && _groundTextureFL == 3;
+            _carIsNotOnSand = !(_groundTagFL.CompareTo("Terrain") == 0 && (_groundTextureFL <= 1));
+
+            SetThrustEnabled();
+            SetBrakeTorque();
+            SetBrakeSound(_doSkidmarking);
+            SetSkidmarking(_doSkidmarking);
+            SetMotorTorque();
+            SetSteerAngle();
+        
     }
 
-    private void SetThrustEnabled()
+	public void FreezeAfterRescue()
+	{
+        //Vector3 counterMovement = new Vector3(-_rigidBody.velocity.x, 0, -_rigidBody.velocity.z);
+        //_rigidBody.AddForce(counterMovement);
+
+        _rigidBody.velocity = Vector3.zero;
+
+        torque = 0;
+
+        wheelColliderFL.motorTorque = 0;
+        wheelColliderFR.motorTorque = 0;
+
+        wheelColliderFL.brakeTorque = Mathf.Infinity;
+        wheelColliderFR.brakeTorque = Mathf.Infinity;
+        wheelColliderBL.brakeTorque = Mathf.Infinity;
+        wheelColliderBR.brakeTorque = Mathf.Infinity;
+    }
+
+	private void SetThrustEnabled()
 	{
         thrustEnabled = timingBehaviour.IsCountdownDone;
     }
 
     private void SetMotorTorque()
 	{
-        float torque = 0;
+        torque = 0;
 
         bool maxForwardSpeedNotExceeded = VelocityIsForeward && CurrentSpeedKMH < maxSpeedKMH;
         bool maxBackwardSpeedNotExceeded = !VelocityIsForeward && CurrentSpeedKMH < maxSpeedBackwardKMH;
@@ -152,20 +174,20 @@ public class CarBehaviour : MonoBehaviour
 
     private void SetBrakeTorque()
 	{
-        float torque = 0;
+        float brakeTorque = 0;
 		if (DoFullBrake)
 		{
-            torque = fullBrakeTorque;
+            brakeTorque = fullBrakeTorque;
 		}
 		if (DoBraking)
 		{
-            torque = maxBrakeTorque;
+            brakeTorque = maxBrakeTorque;
 		}
 
-        wheelColliderFL.brakeTorque = torque;
-        wheelColliderFR.brakeTorque = torque;
-        wheelColliderBL.brakeTorque = torque;
-        wheelColliderBR.brakeTorque = torque;
+        wheelColliderFL.brakeTorque = brakeTorque;
+        wheelColliderFR.brakeTorque = brakeTorque;
+        wheelColliderBL.brakeTorque = brakeTorque;
+        wheelColliderBR.brakeTorque = brakeTorque;
     }
 
     private void SetBrakeSound(bool doBrakeSound)
