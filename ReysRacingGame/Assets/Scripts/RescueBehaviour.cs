@@ -4,7 +4,7 @@ public class RescueBehaviour : MonoBehaviour
 {
     public Transform[] spots = { };
 
-    public bool DoRescue => Input.GetKey("r");
+    public bool DoRescue => Input.GetKeyUp("r");
 
     private CarBehaviour car;
 
@@ -19,15 +19,31 @@ public class RescueBehaviour : MonoBehaviour
 		if (DoRescue)
 		{
             var closestSpot = FindClosestRescueSpot();
-
-            transform.position = closestSpot.position;
-
-            car.FreezeAfterRescue();
-            //car.torque = 0;
-            Input.ResetInputAxes();
-
-            
+            Position(closestSpot);
 		}
+
+        for(int i = 1; i <= 5; i++)
+		{
+            bool pressed = Input.GetKeyUp(i.ToString());
+			if (pressed)
+			{
+                Position(spots[i - 1]);
+			}
+		}
+    }
+
+    private void Position(Transform spot)
+	{
+        
+
+        transform.position = spot.position + Vector3.up * 0.3f;
+
+        transform.rotation = Quaternion.Euler(0, transform.rotation.eulerAngles.y, 0);
+
+
+        car.FreezeAfterRescue();
+        //car.torque = 0;
+        Input.ResetInputAxes();
     }
 
 

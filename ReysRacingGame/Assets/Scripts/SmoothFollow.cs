@@ -23,13 +23,10 @@ public class SmoothFollow : MonoBehaviour
 		float wantedRotationAngle = target.eulerAngles.y;
         float wantedHeight;
 
-		if (transform.position.y < terrainHeight + height)
-		{
-            wantedHeight = target.position.y + height;
-        } else
-		{
-            wantedHeight = terrainHeight + height;
-		}
+        float heightAboveTerrain = terrainHeight + height;
+        float heightAboveBuggy = target.position.y + height;
+
+        wantedHeight = Math.Max(heightAboveBuggy, heightAboveTerrain);
 
         float currentRotationAngle = transform.eulerAngles.y;
         float currentHeight = transform.position.y;
