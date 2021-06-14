@@ -1,4 +1,4 @@
-﻿using System.Collections;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,15 +9,27 @@ public class SmoothFollow : MonoBehaviour
     public float height = 2.0f; // the height of the camera above the target
     public float heightDamping = 2.0f; // How much we damp in height
     public float rotationDamping = 1.0f; // How much we damp in rotation
+    public Terrain terrain;
 
     // Gets called after all other update methods
 	void LateUpdate()
 	{
         // Early out if we don't have a target
 		if (!target) return;
+
+        float terrainHeight = terrain.SampleHeight(transform.position);
+
         // Calculate the current rotation angles
 		float wantedRotationAngle = target.eulerAngles.y;
-        float wantedHeight = target.position.y + height;
+        float wantedHeight;
+
+		if (transform.position.y < terrainHeight + height)
+		{
+            wantedHeight = target.position.y + height;
+        } else
+		{
+            wantedHeight = terrainHeight + height;
+		}
 
         float currentRotationAngle = transform.eulerAngles.y;
         float currentHeight = transform.position.y;
