@@ -64,7 +64,51 @@ public class CarBehaviour : MonoBehaviour
     public float speedMeterRotationOffset = 34f;
     public float maxBrakeTorque = 500;
 
-    public float torque = 0.0f;
+    public Transform water;
+	public float WaterLevel => water != null ? water.position.y : 0f;
+    public float buggyHeight = 2.0f;
+    /**
+     * Defines the maximum amount of water resistance the buggy experiences as BrakeTorque.
+     */
+    public float maxBreakTorqueDueToRelativeSubmersion = 200;
+
+    /**
+     * Returns a value [0, 1] where 0 is none submersion under water and 1 is full submersion under water.
+     */
+    public float BuggySubmersion {
+        get {
+            var submersionInMeters = WaterLevel - transform.position.y;
+            var relativeSubmersion = submersionInMeters / buggyHeight;
+            float relativeValueFrom0To1;
+
+            if(relativeSubmersion > 1)
+			{
+                relativeValueFrom0To1 = 1f;
+			} else if(relativeSubmersion <= 0)
+			{
+                relativeValueFrom0To1 = 0f;
+			} else
+			{
+                relativeValueFrom0To1 = relativeSubmersion;
+			}
+
+            Debug.Log($"Buggy is submerged underwater by {relativeValueFrom0To1}");
+
+            return relativeValueFrom0To1;
+        }
+    }
+
+    /**
+     * Additional BrakeTorque if buggy is partially or fully underwater.
+     * If above water, then is 0;
+     * If fully in water, then experiences depth-independent water resistance.
+     * If partially in water, then experiences depth-dependent water resistance.
+     */
+    public float CurrentBreakTorqueDueToRelativeSubmersion => maxBreakTorqueDueToRelativeSubmersion * BuggySubmersion;
+    public float maxDragDueToSubmersion = 2;
+    public float CurrentDragDueToRelativeSubmersion => maxDragDueToSubmersion * BuggySubmersion;
+
+	public float torque = 0.0f;
         
     private bool thrustEnabled = false;
 
@@ -130,7 +174,7 @@ public class CarBehaviour : MonoBehaviour
             SetSkidmarking(_doSkidmarking);
             SetMotorTorque();
             SetSteerAngle();
-        
+            SlowDownInWater();
     }
 
 	public void FreezeAfterRescue()
@@ -189,6 +233,14 @@ public class CarBehaviour : MonoBehaviour
         wheelColliderBL.brakeTorque = brakeTorque;
         wheelColliderBR.brakeTorque = brakeTorque;
     }
+
+    private void SlowDownInWater()
+	{
+        if (BuggySubmersion <= 0) return;
+
+        _rigidBody.drag = CurrentDragDueToRelativeSubmersion;
+        Debug.Log($"current drag {CurrentDragDueToRelativeSubmersion}");
+	}
 
     private void SetBrakeSound(bool doBrakeSound)
 	{
