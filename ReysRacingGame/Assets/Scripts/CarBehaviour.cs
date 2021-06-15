@@ -175,6 +175,7 @@ public class CarBehaviour : MonoBehaviour
             SetMotorTorque();
             SetSteerAngle();
             SlowDownInWater();
+            
     }
 
 	public void FreezeAfterRescue()

@@ -24,6 +24,14 @@ namespace Assets.Scripts
 		void FixedUpdate()
 		{
 			SetSmokeRate(engine.CurrentSpeedRPM);
+			
+			if(engine.BuggySubmersion > 0.5)
+			{
+				_smokeEmission.enabled = false;
+			} else
+			{
+				_smokeEmission.enabled = true;
+			}
 		}
 
 		void SetSmokeRate(float engineRPM)
